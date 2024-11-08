@@ -4,23 +4,15 @@
   ...
 }:
 let
-  packages = [
-    "warp-grpc"
-    "http2-grpc-types"
-    "http2-grpc-proto3-wire"
-    "http2-grpc-proto-lens"
-    "http2-client-grpc"
-  ];
-  genName = "package.gen.nix";
+  inherit (import ./data.nix) packages genName;
 in
 {
-  flake.overlays.default = import ./overlay.nix {
-    inherit
-      lib
-      genName
-      packages
-      ;
+  flake = {
+    shell = with pkgs; [
+      cabal2nix
+    ];
+    packages = lib.foldl' (acc: el: acc // { ${el} = pkgs.haskellPackages.${el}; }) { } packages;
   };
 
-  tasks.gen-packages = lib.map (name: "${lib.genExe pkgs.cabal2nix} ./${name} > ${genName}") packages;
+  tasks.gen-packages = lib.map (name: "cabal2nix ./${name} > ${genName}") packages;
 }
