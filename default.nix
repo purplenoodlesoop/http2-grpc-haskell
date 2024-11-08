@@ -11,24 +11,16 @@ let
     "http2-grpc-proto-lens"
     "http2-client-grpc"
   ];
-  mapPackages = lib.flip lib.map packages;
   genName = "package.gen.nix";
 in
 {
-  flake = {
-    shell = with pkgs; [
-      cabal2nix
-    ];
-
-    packages = lib.foldl' (
-      packages: name:
+  flake.overlays.default = import ./overlay.nix {
+    inherit
+      lib
+      genName
       packages
-      // {
-        ${name} = pkgs.haskellPackages.callPackage ./${name}/${genName} { };
-      }
-    ) { } packages;
+      ;
   };
 
-  tasks.gen-packages = mapPackages (name: "cabal2nix ./${name} > ${genName}");
-
+  tasks.gen-packages = lib.map (name: "${lib.genExe pkgs.cabal2nix} ./${name} > ${genName}") packages;
 }

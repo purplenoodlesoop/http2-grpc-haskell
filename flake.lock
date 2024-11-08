@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1731024998,
-        "narHash": "sha256-/Nlm2QG5Dl5ON4gtbuu8/rqPxWutO6mpueTEtMCVhwQ=",
+        "lastModified": 1731032828,
+        "narHash": "sha256-J+d9GXSNd3kaR/3NUyeyXPgx/GmUW8Da6G2dCrp7K6o=",
         "owner": "purplenoodlesoop",
         "repo": "core-flake",
-        "rev": "285c86446ebea629d3cf801b6b73f30a0ac47286",
+        "rev": "d7a8e42f7d4e699da23a234886143039a8ceac7c",
         "type": "github"
       },
       "original": {

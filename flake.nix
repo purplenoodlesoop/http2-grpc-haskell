@@ -8,8 +8,11 @@
   };
   # 
   outputs =
-    inputs:
-    with inputs.core-flake;
+    {
+      core-flake,
+      ...
+    }:
+    with core-flake;
     lib.evalFlake {
       imports = [
         ./.
