@@ -3,5 +3,4 @@ dist-newstyle/
 stack*.yaml.lock
 .stack-work/
 *~
-.direnv
 result

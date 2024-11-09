@@ -1,18 +1,10 @@
+{ lib }:
+self: super:
+let
+  data = import ./data.nix { inherit lib; };
+in
 {
-  lib,
-  genName,
-  packages,
-}:
-self: super: {
   haskellPackages = super.haskellPackages.override {
-    overrides =
-      hSelf: hSuper:
-      lib.foldl' (
-        packages: name:
-        packages
-        // {
-          ${name} = hSelf.callPackage ./${name}/${genName} { };
-        }
-      ) { } packages;
+    overrides = hSelf: hSuper: with data; foldl (name: hSelf.callPackage ./${name}/${genName} { });
   };
 }

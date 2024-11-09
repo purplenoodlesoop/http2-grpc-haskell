@@ -4,15 +4,12 @@
   ...
 }:
 let
-  inherit (import ./data.nix) packages genName;
+  data = import ./data.nix { inherit lib; };
 in
 {
-  flake = {
-    shell = with pkgs; [
-      cabal2nix
-    ];
-    packages = lib.foldl' (acc: el: acc // { ${el} = pkgs.haskellPackages.${el}; }) { } packages;
-  };
+  tasks.gen-packages =
+    with data;
+    lib.map (name: "${lib.getExe pkgs.cabal2nix} ./${name} > ${genName}") packages;
 
-  tasks.gen-packages = lib.map (name: "cabal2nix ./${name} > ${genName}") packages;
+  flake.packages = data.foldl (name: pkgs.haskellPackages.${name});
 }

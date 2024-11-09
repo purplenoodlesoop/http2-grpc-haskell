@@ -14,31 +14,16 @@
       ...
     }:
     let
-      inherit (import ./data.nix) packages genName;
-      overlay = self: super: {
-        haskellPackages = super.haskellPackages.override {
-          overrides =
-            hSelf: hSuper:
-            nixpkgs.lib.foldl' (
-              packages: name:
-              packages
-              // {
-                ${name} = hSelf.callPackage ./${name}/${genName} { };
-              }
-            ) { } packages;
-        };
+      overlay = import ./overlay.nix {
+        inherit (nixpkgs) lib;
       };
     in
     core-flake.lib.evalFlake {
       overlays = [ overlay ];
-
-      module = {
-        imports = [
-          ./.
-          core-flake.nixosModules.tasks
-        ];
-
-        flake.overlays.default = overlay;
-      };
+      perSystem.imports = [
+        core-flake.nixosModules.tasks
+        ./.
+      ];
+      topLevel.overlays.default = overlay;
     };
 }
